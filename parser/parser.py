@@ -6,14 +6,23 @@ from urllib.request import urlretrieve
 
 
 class Parser:
-    def __init__(self, driver_path="./chromedriver"):
+    def __init__(self, driver_path="chromedriver", colab=False):
         """Initialize main class variables.
 
         :param driver_path: Path to chromedriver.
         :type driver_path: str
+        :param colab: Is the code running on google colaboratory?
+        :type colab: bool
         """
 
-        self.wb = webdriver.Chrome(driver_path)
+        if colab:
+          options = webdriver.ChromeOptions()
+          options.add_argument('--headless')
+          options.add_argument('--no-sandbox')
+          options.add_argument('--disable-dev-shm-usage')
+          self.wb = webdriver.Chrome(driver_path,options=options)
+        else:
+          self.wb = webdriver.Chrome(driver_path)
 
     def parse_images(self, base_url, page_url, images_dir):
         """Download images from url.
